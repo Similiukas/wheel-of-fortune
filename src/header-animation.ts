@@ -111,27 +111,32 @@ export async function startAnimation() {
 
     // Update the positions and scales of the sprites based on the window size
     function updateSpritePositionsAndScales() {
-        const scaleFactor = window.innerWidth / 1920; // Assuming 1920 is the base width for scaling
+        const isMobile = window.innerHeight > window.innerWidth;
+        const scaleFactor = isMobile ? window.innerWidth / 1920 + 0.15 : window.innerWidth / 1920; // Assuming 1920 is the base width for scaling
 
         showdownSprites.forEach((sprite, i) => {
             sprite.scale.set(0.85 * scaleFactor); // Update scale based on window size
             sprite.x = showdownParts[i].x * scaleFactor; // Update x position based on window size
             sprite.y = showdownParts[i].y + showdownParts[i].yD * scaleFactor; // Update y position based on window size
+            isMobile && (sprite.x -= 150); // Adjust x position for mobile
         });
 
         slotsSprites.forEach((sprite, i) => {
             sprite.scale.set(0.85 * scaleFactor);
             sprite.x = slotParts[i].x * scaleFactor;
             sprite.y = slotParts[i].y + slotParts[i].yD * scaleFactor;
+            isMobile && (sprite.x -= 150); // Adjust x position for mobile
         });
 
         boltSprite.scale.set(0.85 * scaleFactor);
         boltSprite.x = bolt.x * scaleFactor;
         boltSprite.y = bolt.y + bolt.yD * scaleFactor;
+        isMobile && (boltSprite.x -= 150); // Adjust x position for mobile
 
         mustDropSprite.scale.set(0.5 * scaleFactor);
         mustDropSprite.x = mustDropText.x * scaleFactor;
         mustDropSprite.y = mustDropText.y + mustDropText.yD * scaleFactor;
+        isMobile && (mustDropSprite.x -= 150); // Adjust x position for mobile
     }
     updateSpritePositionsAndScales();
     window.addEventListener('resize', updateSpritePositionsAndScales);
