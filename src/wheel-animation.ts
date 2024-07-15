@@ -1,5 +1,5 @@
 import { Application, Assets, Sprite, Ticker } from 'pixi.js';
-import { getWheelPosition } from './utils';
+import { getWheelPosition, randomInt } from './utils';
 
 let app: Application;
 let wheel: Sprite;
@@ -17,7 +17,6 @@ export async function setUpWheel() {
     app.stage.addChild(wheel);
 
     function updateSpritePositionsAndScales() {
-        // app.renderer.resize(wheelContainer.clientWidth, wheelContainer.clientHeight);
         const scaleFactor = window.innerHeight / 1080; // Assuming 1920 is the base width for scaling
         wheel.scale.set(0.75 * scaleFactor);
         wheel.x = window.innerWidth / 2;
@@ -43,7 +42,7 @@ export async function spinWheel() {
     const endingPositionDegrees = await getWheelPosition();
 
     let currentSpeed = 0.5; // Initial speed of the spin
-    const totalRotations = 5; // Minimum total rotations for randomness
+    const totalRotations = randomInt(5, 9); // Minimum total rotations for randomness
 
     // Calculate the final rotation angle in radians, including total rotations and the ending position
     const finalRotationRadians = (totalRotations * 360 + endingPositionDegrees.end) * (Math.PI / 180);

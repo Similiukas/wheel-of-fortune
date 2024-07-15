@@ -8,5 +8,12 @@ function convertPositionToAngle(position: { POSITION: number }) {
 }
 
 export async function getWheelPosition(): Promise<{ end: number, randomAddition: number }> {
-    return new Promise(resolve => setTimeout(() => resolve(convertPositionToAngle({ POSITION: 1 })), 100)); // Simulate API delay
+    try {
+        const response = await fetch('http://localhost:3000/wheel');
+        const position = await response.json();
+        return convertPositionToAngle(position);
+    } catch (error) {
+        console.error('Failed to fetch wheel position, using random position instead\nPlease make sure the server is running');
+        return convertPositionToAngle({ POSITION: randomInt(0, 3) });
+    }
 }
