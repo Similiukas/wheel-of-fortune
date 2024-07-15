@@ -1,4 +1,4 @@
-import { Application, Assets, Renderer, Sprite } from 'pixi.js';
+import { Application, Assets, Renderer, Sprite, Ticker } from 'pixi.js';
 import { randomInt } from './utils';
 
 function showdownAnimation(app: Application<Renderer>, sprites: Sprite[]) {
@@ -6,15 +6,19 @@ function showdownAnimation(app: Application<Renderer>, sprites: Sprite[]) {
     const delayIncrement = 10; // Number of frames to wait before showing the next sprite
     let currentSpriteIndex = 0; // Start with the first sprite
 
-    app.ticker.add(() => {
+    const animation = (ticker: Ticker) => {
         if (visibilityDelay <= 0 && currentSpriteIndex < sprites.length) {
             sprites[currentSpriteIndex].visible = true; // Make the current sprite visible
             currentSpriteIndex++; // Move to the next sprite
             visibilityDelay = delayIncrement; // Reset the delay counter
+        } else if (currentSpriteIndex === sprites.length) {
+            ticker.remove(animation);
         } else {
             visibilityDelay--; // Decrement the delay counter
         }
-    });
+    };
+
+    app.ticker.add(animation);
 }
 
 function flickerAnimation(app: Application<Renderer>, sprites: Sprite[], delay: number) {
@@ -22,16 +26,20 @@ function flickerAnimation(app: Application<Renderer>, sprites: Sprite[], delay: 
     let visibility = false; // Initial visibility of the slots
     let flickerCount = 2 * 2;
 
-    app.ticker.add(() => {
+    const animation = (ticker: Ticker) => {
         if (_delay <= 0 && flickerCount > 0) {
             sprites.forEach(sprite => (sprite.visible = visibility)); // Update the slots' visibility
             visibility = !visibility; // Toggle the slots' visibility
             _delay = randomInt(3, 8); // Reset the delay counter
             flickerCount--;
+        } else if (flickerCount === 0) {
+            ticker.remove(animation);
         } else {
             _delay--; // Decrement the delay counter
         }
-    });
+    };
+
+    app.ticker.add(animation);
 }
 
 function boltAnimation(app: Application<Renderer>, sprite: Sprite) {
