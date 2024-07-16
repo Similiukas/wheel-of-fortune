@@ -64,6 +64,7 @@ export async function startAnimation() {
     header.appendChild(app.canvas);
 
     // ----------------- Text -----------------
+    // Define the parts of the text and their positions
     const showdownParts = [
         { url: './assets/s@2x.png', x: 575, y: 30, yD: 0 },
         { url: './assets/h@2x.png', x: 655, y: 30, yD: 0 },
@@ -112,7 +113,7 @@ export async function startAnimation() {
     // Update the positions and scales of the sprites based on the window size
     function updateSpritePositionsAndScales() {
         const isMobile = window.innerHeight > window.innerWidth;
-        const scaleFactor = isMobile ? window.innerWidth / 1920 + 0.15 : window.innerWidth / 1920; // Assuming 1920 is the base width for scaling
+        const scaleFactor = isMobile ? window.innerWidth / 1920 + 0.15 : window.innerWidth / 1920; // Assuming 1920 is the base width for scaling and rescaling for mobile
 
         showdownSprites.forEach((sprite, i) => {
             sprite.scale.set(0.85 * scaleFactor); // Update scale based on window size

@@ -39,6 +39,7 @@ export async function spinWheel() {
     if (isSpinning) return;
     isSpinning = true;
 
+    // Get the ending position of the wheel from API. Additionally, some random angle is added for visual effect
     const endingPositionDegrees = await getWheelPosition();
 
     let currentSpeed = 0.5; // Initial speed of the spin
@@ -51,14 +52,13 @@ export async function spinWheel() {
         wheel.rotation += currentSpeed * ticker.deltaTime;
 
         // Adjust deceleration dynamically to ensure the wheel stops at the final rotation
-        const neededDeceleration = calculateNeededDeceleration(wheel.rotation, finalRotationRadians, currentSpeed);
-        currentSpeed *= neededDeceleration;
+        currentSpeed *= calculateNeededDeceleration(wheel.rotation, finalRotationRadians, currentSpeed);
 
         // Stop the animation when the wheel reaches the final rotation
         if (wheel.rotation >= finalRotationRadians - 0.01 || currentSpeed < 0.0005) {
-            wheel.rotation = finalRotationRadians - (endingPositionDegrees.randomAddition - 45) * (Math.PI / 180); // Adjust for any overshoot
-            isSpinning = false;
+            wheel.rotation = finalRotationRadians - (endingPositionDegrees.randomAddition - 45) * (Math.PI / 180); // Adjust for any overshoot, to center the wheel
             ticker.remove(animation);
+            isSpinning = false;
         }
     };
 
